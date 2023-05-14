@@ -1,26 +1,30 @@
-import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Form, Input, Button } from "antd";
+import moment from "moment";
 
 const { TextArea } = Input;
 
 const CreateUser = () => {
-  const [user, setUser] = useState({});
   const navigate = useNavigate();
 
   const onFinish = (values) => {
     const newUser = {
-      ...user,
-      ...values,
+      Email: values.Email,
+      PassWord: values.PassWord,
+      UserName: values.UserName,
+      FirstName: values.FirstName,
+      SurName: values.SurName,
+      FullName: values.FullName,
       Address: {
-        FullName: values.FullName,
-        AddressNo: values.AddressNo,
-        WardName: values.WardName,
-        DistrictName: values.DistrictName,
         ProvinceName: values.ProvinceName,
+        DistrictName: values.DistrictName,
+        WardName: values.WardName,
+        AddressNo: values.AddressNo,
+        FullName: values.AddressFullName
       },
-      // Password: values.PassWord // Thêm trường password vào user
+      DateOfBir: values.DateOfBir ? moment(values.DateOfBir, 'YYYY-MM-DD') : null,
+      IntroduceYourself: values.IntroduceYourself
     };
     axios
       .post("http://localhost:3000/User", newUser)
@@ -33,6 +37,7 @@ const CreateUser = () => {
         alert("Error creating user");
       });
   };
+  
 
   return (
     <div>
@@ -44,13 +49,13 @@ const CreateUser = () => {
         onFinish={onFinish}
       >
         <Form.Item
-          label="UserName"
-          name="UserName"
-          rules={[{ required: true, message: "Please input your username!" }]}
+          label="Email"
+          name="Email"
+          rules={[{ required: true, type: "email", message: "Please input a valid email!" }]}
         >
           <Input />
         </Form.Item>
-
+        
         <Form.Item
           label="PassWord"
           name="PassWord"
@@ -60,16 +65,17 @@ const CreateUser = () => {
         </Form.Item>
 
         <Form.Item
-          label="Email"
-          name="Email"
-          rules={[{ required: true, type: "email", message: "Please input a valid email!" }]}
+          label="UserName"
+          name="UserName"
+          rules={[{ required: true, message: "Please input your username!" }]}
         >
           <Input />
         </Form.Item>
 
 
+
         <Form.Item
-          label="First Name"
+          label="FirstName"
           name="FirstName"
           rules={[{ required: true, message: "Please input your first name!" }]}
         >
@@ -77,7 +83,7 @@ const CreateUser = () => {
         </Form.Item>
 
         <Form.Item
-          label="Surname"
+          label="SurName"
           name="SurName"
           rules={[{ required: true, message: "Please input your surname!" }]}
         >
@@ -85,25 +91,17 @@ const CreateUser = () => {
         </Form.Item>
 
         <Form.Item
-          label="Address Name"
+          label="FullName"
           name="FullName"
-          rules={[{ required: true, message: "Please input your address name!" }]}
+          rules={[{ required: true, message: "Please input your full name!" }]}
         >
           <Input />
         </Form.Item>
 
         <Form.Item
-          label="Address No"
-          name="AddressNo"
-          rules={[{ required: true, message: "Please input your address number!" }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Ward Name"
-          name="WardName"
-          rules={[{ required: true, message: "Please input your ward name!" }]}
+          label="Province Name"
+          name="ProvinceName"
+          rules={[{ required: true, message: "Please input your province name!" }]}
         >
           <Input />
         </Form.Item>
@@ -117,12 +115,29 @@ const CreateUser = () => {
         </Form.Item>
 
         <Form.Item
-          label="Province Name"
-          name="ProvinceName"
-          rules={[{ required: true, message: "Please input your province name!" }]}
+          label="Ward Name"
+          name="WardName"
+          rules={[{ required: true, message: "Please input your ward name!" }]}
         >
           <Input />
         </Form.Item>
+
+        <Form.Item
+          label="Address No"
+          name="AddressNo"
+          rules={[{ required: true, message: "Please input your address no!" }]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label="AddressFullName"
+          name="AddressFullName"
+          rules={[{ required: true, message: "Please input your address no!" }]}
+        >
+          <Input />
+        </Form.Item>
+
 
         <Form.Item
           label="Date of Birth"

@@ -1,25 +1,17 @@
 import { useEffect, useState } from "react";
-import { Table } from "antd";
+import { Button, Table } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const UserList = () => {
   const columns = [
     {
+      title: "ID",
+      dataIndex: "id",
+    },
+    {
       title: "UserName",
       dataIndex: "UserName",
-    },
-    {
-      title: "Email",
-      dataIndex: "Email",
-    },
-    {
-      title: "FirstName",
-      dataIndex: "FirstName",
-    },
-    {
-      title: "SurName",
-      dataIndex: "SurName",
     },
     {
       title: "Address",
@@ -36,8 +28,9 @@ const UserList = () => {
       key: "action",
       render: (text, record) => (
         <>
-          <button onClick={() => handleUpdateUser(record)}>Update</button>
-          <button onClick={() => handleDeleteUser(record)}>Delete</button>
+          <Button type="primary" onClick={() => handleUserDetail(record)}>View</Button>
+          <Button type="default" onClick={() => handleUpdateUser(record)}>Update</Button>
+          <Button type="text" danger onClick={() => handleDeleteUser(record)}>Delete</Button>
         </>
       ),
     },
@@ -57,6 +50,10 @@ const UserList = () => {
         setUsers(null); // set users to null to indicate an error occurred
       });
   }, []);
+
+  const handleUserDetail = user => {
+    navigate(`/user-detail/${user.id}`)
+  }
 
   const handleUpdateUser = (user) => {
     navigate(`/update-user/${user.id}`);

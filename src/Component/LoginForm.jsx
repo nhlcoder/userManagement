@@ -4,7 +4,16 @@ import { Form, Input, Button, Alert } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
-const LoginForm = () => {
+const storage = {
+  set(key, value){
+    localStorage.setItem(key, JSON.stringify(value));
+  },
+  get(key){
+    return JSON.parse(localStorage.getItem(key));
+  }
+}
+
+const LoginForm = ({ setIsLoggedIn }) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -13,9 +22,13 @@ const LoginForm = () => {
     try {
       const response = await axios.get('http://localhost:3000/User');
       const users = response.data;
-      const user = users.find((user) => user.Email === values.email && user.PassWord === values.password);
-      const admin = values.email == 'admin@gmail.com' && values.password == 'admin';
-      if (admin ?? user) {
+      const user = users.find(
+        (user) => user.Email === values.email && user.PassWord === values.password
+      );
+      const isAdmin = values.email === 'admin@gmail.com' && values.password === 'admin';
+      if (user || isAdmin) {
+        setIsLoggedIn(true);
+        storage.set('isLoggedIn', true); // Lưu thông tin của user vào localStorage
         navigate('/home');
       } else {
         setError('Invalid email or password. Please try again.');
@@ -23,6 +36,7 @@ const LoginForm = () => {
     } catch (error) {
       setError('Failed to fetch user data. Please try again later.');
     }
+  
   };
 
   return (
@@ -68,10 +82,4 @@ const LoginForm = () => {
   );
 };
 
-const LoginFormWithNavigation = () => {
-  const navigate = useNavigate();
-
-  return <LoginForm navigate={navigate} />;
-};
-
-export { LoginForm, LoginFormWithNavigation };
+export default LoginForm;

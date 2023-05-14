@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, DatePicker } from 'antd';
+import moment from 'moment';
 
 const { TextArea } = Input;
 
@@ -26,13 +27,21 @@ const UpdateUser = () => {
 
   const onFinish = (values) => {
     const updatedUser = {
-      ...user,
-      ...values,
-      PassWord: values.PassWord || user.PassWord, // include password in update only if it's not empty
+      Email: values.Email,
+      PassWord: values.PassWord,
+      UserName: values.UserName,
+      FirstName: values.FirstName,
+      SurName: values.SurName,
+      FullName: values.FullName,
       Address: {
-        ...user.Address,
-        ...values.Address,
+        FullName: values.Address.AddressFullName,
+        AddressNo: values.Address.AddressNo,
+        WardName: values.Address.WardName,
+        DistrictName: values.Address.DistrictName,
+        ProvinceName: values.Address.ProvinceName,
       },
+      DateOfBir: values.DateOfBir.format('YYYY-MM-DD'),
+      IntroduceYourself: values.IntroduceYourself
     };
     axios.put(`http://localhost:3000/User/${id}`, updatedUser)
       .then(() => {
@@ -61,24 +70,31 @@ const UpdateUser = () => {
           layout="horizontal"
           onFinish={onFinish}
           initialValues={{
-            UserName: user.UserName,
-            PassWord: user.PassWord,
             Email: user.Email,
+            Password: user.Password,
+            UserName: user.UserName,
             FirstName: user.FirstName,
             SurName: user.SurName,
-            Address: user.Address,
-            DateOfBir: user.DateOfBir,
+            FullName: user.FullName,
+            Address: {
+              AdressFullName: user.Address.AddressFullName,
+              AddressNo: user.Address.AddressNo,
+              WardName: user.Address.WardName,
+              DistrictName: user.Address.DistrictName,
+              ProvinceName: user.Address.ProvinceName,
+            },
+            DateOfBir: user.DateOfBir ? moment(user.DateOfBir, 'YYYY-MM-DD') : null,
             IntroduceYourself: user.IntroduceYourself,
           }}
         >
           <Form.Item
-            label="UserName"
-            name="UserName"
-            rules={[{ required: true, message: 'Please input your username!' }]}
+            label="Email"
+            name="Email"
+            rules={[{ required: true, type: 'email', message: 'Please input a valid email!' }]}
           >
             <Input disabled />
           </Form.Item>
-          
+
           <Form.Item
             label="PassWord"
             name="PassWord"
@@ -88,16 +104,15 @@ const UpdateUser = () => {
           </Form.Item>
 
           <Form.Item
-            label="Email"
-            name="Email"
-            rules={[{ required: true, type: 'email', message: 'Please input a valid email!' }]}
+            label="UserName"
+            name="UserName"
+            rules={[{ required: true, message: 'Please input your username!' }]}
           >
             <Input />
           </Form.Item>
-
-
+          
           <Form.Item
-            label="First Name"
+            label="FirstName"
             name="FirstName"
             rules={[{ required: true, message: 'Please input your first name!' }]}
           >
@@ -113,33 +128,9 @@ const UpdateUser = () => {
           </Form.Item>
 
           <Form.Item
-            label="Address"
-            name={['Address', 'FullName']}
-            rules={[{ required: true, message: 'Please input your address name!' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Address No"
-            name={['Address', 'AddressNo']}
-            rules={[{ required: true, message: 'Please input your address number!' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Ward Name"
-            name={['Address', 'WardName']}
-            rules={[{ required: true, message: 'Please input your ward name!' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="District Name"
-            name={['Address', 'DistrictName']}
-            rules={[{ required: true, message: 'Please input your district name!' }]}
+            label="FullName"
+            name="FullName"
+            rules={[{ required: true, message: 'Please input your fullname!' }]}
           >
             <Input />
           </Form.Item>
@@ -153,11 +144,43 @@ const UpdateUser = () => {
           </Form.Item>
 
           <Form.Item
+            label="District Name"
+            name={['Address', 'DistrictName']}
+            rules={[{ required: true, message: 'Please input your district name!' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Ward Name"
+            name={['Address', 'WardName']}
+            rules={[{ required: true, message: 'Please input your ward name!' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Address No"
+            name={['Address', 'AddressNo']}
+            rules={[{ required: true, message: 'Please input your address number!' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Adress FullName"
+            name={['Address', 'AddressFullName']}
+            rules={[{ required: true, message: 'Please input your address fullname!' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
             label="Date of Birth"
             name="DateOfBir"
             rules={[{ required: true, message: 'Please input your date of birth!' }]}
           >
-            <Input />
+            <DatePicker format="YYYY-MM-DD" />
           </Form.Item>
 
           <Form.Item
