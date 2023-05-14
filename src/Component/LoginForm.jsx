@@ -25,7 +25,7 @@ const LoginForm = ({ setIsLoggedIn }) => {
       const user = users.find(
         (user) => user.Email === values.email && user.PassWord === values.password
       );
-      const isAdmin = values.email === 'admin@gmail.com' && values.password === 'admin';
+      const isAdmin = values.email === 'nguyenhaily@gmail.com' && values.password === 'nguyenhaily';
       if (user || isAdmin) {
         setIsLoggedIn(true);
         storage.set('isLoggedIn', true); // Lưu thông tin của user vào localStorage
